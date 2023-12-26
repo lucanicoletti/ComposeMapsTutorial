@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
@@ -29,14 +31,18 @@ class MainActivity : ComponentActivity() {
                     val cameraPositionState = rememberCameraPositionState {
                         this.position = CameraPosition.fromLatLngZoom(locationLondon, 13f)
                     }
+                    val context = LocalContext.current
 
                     val mapProperties = MapProperties(
                         isBuildingEnabled = false,
                         isIndoorEnabled = false,
                         isMyLocationEnabled = false,
-                        isTrafficEnabled = true,
+                        isTrafficEnabled = false,
                         latLngBoundsForCameraTarget = null,
-                        mapStyleOptions = null,
+                        mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
+                            /* clientContext = */ context,
+                            /* resourceId = */ R.raw.map_style
+                        ),
                         mapType = MapType.NORMAL,
                         maxZoomPreference = 21f,
                         minZoomPreference = 3f,

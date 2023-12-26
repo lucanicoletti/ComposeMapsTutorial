@@ -1,21 +1,5 @@
 [
   {
-    "featureType": "administrative",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
     "featureType": "road",
     "stylers": [
       {
