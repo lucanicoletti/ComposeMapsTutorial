@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                         isBuildingEnabled = false,
                         isIndoorEnabled = false,
                         isMyLocationEnabled = false,
-                        isTrafficEnabled = false,
+                        isTrafficEnabled = true,
                         latLngBoundsForCameraTarget = null,
                         mapStyleOptions = null,
                         mapType = MapType.NORMAL,
