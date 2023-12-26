@@ -22,14 +22,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeMapsTutorialTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val locationLondon = LatLng(51.5072, -0.1276)
+                    val locationLondon = LatLng(
+                        /* latitude = */ 51.5072,
+                        /* longitude = */ -0.1276
+                    )
                     val cameraPositionState = rememberCameraPositionState {
-                        this.position = CameraPosition.fromLatLngZoom(locationLondon, 15f)
+                        this.position = CameraPosition.fromLatLngZoom(
+                            /* target = */ locationLondon,
+                            /* zoom = */ 15f
+                        )
                     }
 
                     val mapProperties = MapProperties(
