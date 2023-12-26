@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         scrollGesturesEnabledDuringRotateOrZoom = true,
                         tiltGesturesEnabled = true,
                         zoomControlsEnabled = false,
-                        zoomGesturesEnabled = true,
+                        zoomGesturesEnabled = false,
                     )
 
                     GoogleMap(
