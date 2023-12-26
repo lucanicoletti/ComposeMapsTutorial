@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
@@ -35,7 +36,10 @@ class MainActivity : ComponentActivity() {
                         isIndoorEnabled = false,
                         isMyLocationEnabled = false,
                         isTrafficEnabled = false,
-                        latLngBoundsForCameraTarget = null,
+                        latLngBoundsForCameraTarget = LatLngBounds(
+                            LatLng(51.4728, -0.1687),
+                            LatLng(51.5378, -0.0231)
+                        ),
                         mapStyleOptions = null,
                         mapType = MapType.TERRAIN,
                         maxZoomPreference = 21f,
