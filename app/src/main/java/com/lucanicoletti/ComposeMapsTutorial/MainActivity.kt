@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     )
 
                     val mapUiSettings = MapUiSettings(
-                        compassEnabled = true,
+                        compassEnabled = false,
                         indoorLevelPickerEnabled = true,
                         mapToolbarEnabled = true,
                         myLocationButtonEnabled = true,
