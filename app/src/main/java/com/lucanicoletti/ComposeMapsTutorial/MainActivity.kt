@@ -31,15 +31,15 @@ class MainActivity : ComponentActivity() {
                     }
 
                     val mapProperties = MapProperties(
-                        isBuildingEnabled = false,
+                        isBuildingEnabled = true,
                         isIndoorEnabled = false,
                         isMyLocationEnabled = false,
                         isTrafficEnabled = false,
                         latLngBoundsForCameraTarget = null,
                         mapStyleOptions = null,
-                        mapType = MapType.NORMAL,
-                        maxZoomPreference = 15f,
-                        minZoomPreference = 15f,
+                        mapType = MapType.HYBRID,
+                        maxZoomPreference = 21f,
+                        minZoomPreference = 3f,
                     )
 
                     GoogleMap(
