@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 
@@ -46,10 +47,24 @@ class MainActivity : ComponentActivity() {
                         minZoomPreference = 3f,
                     )
 
+                    val mapUiSettings = MapUiSettings(
+                        compassEnabled = true,
+                        indoorLevelPickerEnabled = true,
+                        mapToolbarEnabled = true,
+                        myLocationButtonEnabled = true,
+                        rotationGesturesEnabled = true,
+                        scrollGesturesEnabled = true,
+                        scrollGesturesEnabledDuringRotateOrZoom = true,
+                        tiltGesturesEnabled = true,
+                        zoomControlsEnabled = true,
+                        zoomGesturesEnabled = true,
+                    )
+
                     GoogleMap(
                         modifier = Modifier.fillMaxSize(),
                         cameraPositionState = cameraPositionState,
-                        properties = mapProperties
+                        properties = mapProperties,
+                        uiSettings = mapUiSettings
                     )
                 }
             }
