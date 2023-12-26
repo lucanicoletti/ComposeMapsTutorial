@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 
@@ -28,9 +30,22 @@ class MainActivity : ComponentActivity() {
                         this.position = CameraPosition.fromLatLngZoom(locationLondon, 13f)
                     }
 
+                    val mapProperties = MapProperties(
+                        isBuildingEnabled = false,
+                        isIndoorEnabled = false,
+                        isMyLocationEnabled = false,
+                        isTrafficEnabled = false,
+                        latLngBoundsForCameraTarget = null,
+                        mapStyleOptions = null,
+                        mapType = MapType.NORMAL,
+                        maxZoomPreference = 21f,
+                        minZoomPreference = 3f,
+                    )
+
                     GoogleMap(
                         modifier = Modifier.fillMaxSize(),
                         cameraPositionState = cameraPositionState,
+                        properties = mapProperties
                     )
                 }
             }
