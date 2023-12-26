@@ -53,10 +53,10 @@ class MainActivity : ComponentActivity() {
                         mapToolbarEnabled = true,
                         myLocationButtonEnabled = true,
                         rotationGesturesEnabled = true,
-                        scrollGesturesEnabled = false,
+                        scrollGesturesEnabled = true,
                         scrollGesturesEnabledDuringRotateOrZoom = true,
                         tiltGesturesEnabled = true,
-                        zoomControlsEnabled = true,
+                        zoomControlsEnabled = false,
                         zoomGesturesEnabled = true,
                     )
 
