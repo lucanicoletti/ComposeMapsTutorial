@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val locationLondon = LatLng(51.5072, -0.1276)
                     val cameraPositionState = rememberCameraPositionState {
-                        this.position = CameraPosition.fromLatLngZoom(locationLondon, 13f)
+                        this.position = CameraPosition.fromLatLngZoom(locationLondon, 15f)
                     }
 
                     val mapProperties = MapProperties(
@@ -37,9 +37,9 @@ class MainActivity : ComponentActivity() {
                         isTrafficEnabled = false,
                         latLngBoundsForCameraTarget = null,
                         mapStyleOptions = null,
-                        mapType = MapType.SATELLITE,
-                        maxZoomPreference = 21f,
-                        minZoomPreference = 3f,
+                        mapType = MapType.NORMAL,
+                        maxZoomPreference = 15f,
+                        minZoomPreference = 15f,
                     )
 
                     GoogleMap(
