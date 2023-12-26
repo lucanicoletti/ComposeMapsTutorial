@@ -31,13 +31,13 @@ class MainActivity : ComponentActivity() {
                     }
 
                     val mapProperties = MapProperties(
-                        isBuildingEnabled = true,
+                        isBuildingEnabled = false,
                         isIndoorEnabled = false,
                         isMyLocationEnabled = false,
                         isTrafficEnabled = false,
                         latLngBoundsForCameraTarget = null,
                         mapStyleOptions = null,
-                        mapType = MapType.HYBRID,
+                        mapType = MapType.TERRAIN,
                         maxZoomPreference = 21f,
                         minZoomPreference = 3f,
                     )
