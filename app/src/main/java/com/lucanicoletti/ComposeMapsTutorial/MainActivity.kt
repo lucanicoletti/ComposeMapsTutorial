@@ -1,12 +1,17 @@
 package com.lucanicoletti.ComposeMapsTutorial
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -18,6 +23,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,10 +43,18 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
+                    val locationPermissions = rememberMultiplePermissionsState(
+                        listOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
+                    )
+
+                    LaunchedEffect(key1 = locationPermissions.permissions) {
+                        locationPermissions.launchMultiplePermissionRequest()
+                    }
+
                     val mapProperties = MapProperties(
                         isBuildingEnabled = false,
                         isIndoorEnabled = false,
-                        isMyLocationEnabled = false,
+                        isMyLocationEnabled = locationPermissions.allPermissionsGranted,
                         isTrafficEnabled = false,
                         latLngBoundsForCameraTarget = LatLngBounds(
                             LatLng(51.4728, -0.1687),
@@ -54,13 +68,13 @@ class MainActivity : ComponentActivity() {
 
                     val mapUiSettings = MapUiSettings(
                         compassEnabled = true,
-                        indoorLevelPickerEnabled = true,
+                        indoorLevelPickerEnabled = false,
                         mapToolbarEnabled = true,
                         myLocationButtonEnabled = true,
                         rotationGesturesEnabled = true,
                         scrollGesturesEnabled = true,
                         scrollGesturesEnabledDuringRotateOrZoom = true,
-                        tiltGesturesEnabled = false,
+                        tiltGesturesEnabled = true,
                         zoomControlsEnabled = false,
                         zoomGesturesEnabled = true,
                     )
@@ -69,7 +83,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         cameraPositionState = cameraPositionState,
                         properties = mapProperties,
-                        uiSettings = mapUiSettings
+                        uiSettings = mapUiSettings,
                     )
                 }
             }
