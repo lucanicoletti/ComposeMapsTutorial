@@ -2,16 +2,27 @@ package com.lucanicoletti.ComposeMapsTutorial
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.location.Location
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.maps.LocationSource
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -28,10 +39,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeMapsTutorialTheme {
-                Surface(
+                Box(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
                 ) {
+
+
                     val locationLondon = LatLng(
                         /* latitude = */ 51.5072,
                         /* longitude = */ -0.1276
@@ -47,9 +59,25 @@ class MainActivity : ComponentActivity() {
                         listOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
                     )
 
-                    LaunchedEffect(key1 = locationPermissions.permissions) {
-                        locationPermissions.launchMultiplePermissionRequest()
+                    val myLocationSource = object : LocationSource {
+                        var listener: LocationSource.OnLocationChangedListener? = null
+                        var lastLocation: Location? = null
+                        override fun activate(p0: LocationSource.OnLocationChangedListener) {
+                            this.listener = p0
+                            lastLocation?.let {
+                                this.listener?.onLocationChanged(it)
+                            }
+                        }
+
+                        override fun deactivate() {
+                            this.listener = null
+                        }
+
                     }
+
+//                    LaunchedEffect(key1 = locationPermissions.permissions) {
+//                        locationPermissions.launchMultiplePermissionRequest()
+//                    }
 
                     val mapProperties = MapProperties(
                         isBuildingEnabled = false,
@@ -70,7 +98,7 @@ class MainActivity : ComponentActivity() {
                         compassEnabled = true,
                         indoorLevelPickerEnabled = false,
                         mapToolbarEnabled = true,
-                        myLocationButtonEnabled = true,
+                        myLocationButtonEnabled = false,
                         rotationGesturesEnabled = true,
                         scrollGesturesEnabled = true,
                         scrollGesturesEnabledDuringRotateOrZoom = true,
@@ -80,13 +108,41 @@ class MainActivity : ComponentActivity() {
                     )
 
                     GoogleMap(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize(),
                         cameraPositionState = cameraPositionState,
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
+                        locationSource = myLocationSource
                     )
+                    Surface(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp)
+                            .size(32.dp),
+                        shape = RoundedCornerShape(32.dp),
+                        color = Color.White,
+                        tonalElevation = 18.dp,
+                        shadowElevation = 18.dp,
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .padding(4.dp)
+                                .clickable {
+                                    if (locationPermissions.allPermissionsGranted) {
+                                        // TODO
+                                    } else {
+                                        locationPermissions.launchMultiplePermissionRequest()
+                                    }
+                                },
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "myLocation"
+                        )
+                    }
                 }
             }
         }
     }
+
 }
