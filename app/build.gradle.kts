@@ -61,14 +61,6 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     implementation("com.google.maps.android:maps-compose:4.3.0")
-
-    // Optionally, you can include the Compose utils library for Clustering,
-    // Street View metadata checks, etc.
-    implementation("com.google.maps.android:maps-compose-utils:4.3.0")
-
-    // Optionally, you can include the widgets library for ScaleBar, etc.
-    implementation("com.google.maps.android:maps-compose-widgets:4.3.0")
-
     implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha")
 
     testImplementation("junit:junit:4.13.2")
