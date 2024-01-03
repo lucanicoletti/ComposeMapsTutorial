@@ -13,10 +13,12 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.maps.android.compose.AdvancedMarker
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 
@@ -40,6 +42,32 @@ class MainActivity : ComponentActivity() {
                             /* zoom = */ 15f
                         )
                     }
+                    val pins = listOf(
+                        LatLng(
+                            /* latitude = */ 51.5075,
+                            /* longitude = */ -0.1272
+                        ),
+                        LatLng(
+                            /* latitude = */ 51.5070,
+                            /* longitude = */ -0.1278
+                        ),
+                        LatLng(
+                            /* latitude = */ 51.5074,
+                            /* longitude = */ -0.1266
+                        ),
+                        LatLng(
+                            /* latitude = */ 51.5062,
+                            /* longitude = */ -0.1279
+                        ),
+                        LatLng(
+                            /* latitude = */ 51.5073,
+                            /* longitude = */ -0.1274
+                        ),
+                        LatLng(
+                            /* latitude = */ 51.5074,
+                            /* longitude = */ -0.1273
+                        )
+                    )
 
                     val locationPermissions = rememberMultiplePermissionsState(
                         permissions = listOf(
@@ -82,7 +110,14 @@ class MainActivity : ComponentActivity() {
                         cameraPositionState = cameraPositionState,
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
-                    )
+                    ) {
+                        for (pin in pins) {
+                            AdvancedMarker(
+                                state = MarkerState(pin),
+                                title = "London pin generic"
+                            )
+                        }
+                    }
                 }
             }
         }
