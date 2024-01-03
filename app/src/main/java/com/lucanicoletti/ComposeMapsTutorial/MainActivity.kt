@@ -1,7 +1,5 @@
 package com.lucanicoletti.ComposeMapsTutorial
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -44,7 +42,10 @@ class MainActivity : ComponentActivity() {
                     }
 
                     val locationPermissions = rememberMultiplePermissionsState(
-                        listOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
+                        permissions = listOf(
+                            "android.permission.ACCESS_FINE_LOCATION",
+                            "android.permission.ACCESS_COARSE_LOCATION"
+                        ),
                     )
 
                     LaunchedEffect(key1 = locationPermissions.permissions) {
@@ -60,7 +61,6 @@ class MainActivity : ComponentActivity() {
                             LatLng(51.4728, -0.1687),
                             LatLng(51.5378, -0.0231)
                         ),
-                        mapStyleOptions = null,
                         mapType = MapType.TERRAIN,
                         maxZoomPreference = 21f,
                         minZoomPreference = 3f,
@@ -68,8 +68,6 @@ class MainActivity : ComponentActivity() {
 
                     val mapUiSettings = MapUiSettings(
                         compassEnabled = true,
-                        indoorLevelPickerEnabled = false,
-                        mapToolbarEnabled = true,
                         myLocationButtonEnabled = true,
                         rotationGesturesEnabled = true,
                         scrollGesturesEnabled = true,
