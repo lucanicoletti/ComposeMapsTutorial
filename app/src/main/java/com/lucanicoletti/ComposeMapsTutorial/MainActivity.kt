@@ -13,12 +13,12 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.maps.android.compose.AdvancedMarker
+import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 
@@ -111,15 +111,40 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
-                        for (pin in pins) {
-                            AdvancedMarker(
-                                state = MarkerState(pin),
-                                title = "London pin generic"
-                            )
-                        }
+                        Clustering(
+                            items = pins.map { ClusterItem(it, "title", "snippet") },
+                            onClusterClick = { _ ->
+                                true
+                            },
+                            onClusterItemClick = { _ ->
+                                true
+                            }
+                        )
                     }
                 }
             }
         }
+    }
+}
+
+data class ClusterItem(
+    val pos: LatLng,
+    val name: String,
+    val desc: String?
+) : ClusterItem {
+    override fun getPosition(): LatLng {
+        return pos
+    }
+
+    override fun getTitle(): String? {
+        return name
+    }
+
+    override fun getSnippet(): String? {
+        return desc
+    }
+
+    override fun getZIndex(): Float? {
+        return null
     }
 }
