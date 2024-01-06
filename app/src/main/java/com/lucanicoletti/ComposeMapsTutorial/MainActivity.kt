@@ -13,12 +13,12 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.clustering.Clustering
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 
@@ -39,34 +39,15 @@ class MainActivity : ComponentActivity() {
                     val cameraPositionState = rememberCameraPositionState {
                         this.position = CameraPosition.fromLatLngZoom(
                             /* target = */ locationLondon,
-                            /* zoom = */ 15f
+                            /* zoom = */ 12f
                         )
                     }
-                    val pins = listOf(
-                        LatLng(
-                            /* latitude = */ 51.5075,
-                            /* longitude = */ -0.1272
-                        ),
-                        LatLng(
-                            /* latitude = */ 51.5070,
-                            /* longitude = */ -0.1278
-                        ),
-                        LatLng(
-                            /* latitude = */ 51.5074,
-                            /* longitude = */ -0.1266
-                        ),
-                        LatLng(
-                            /* latitude = */ 51.5062,
-                            /* longitude = */ -0.1279
-                        ),
-                        LatLng(
-                            /* latitude = */ 51.5073,
-                            /* longitude = */ -0.1274
-                        ),
-                        LatLng(
-                            /* latitude = */ 51.5074,
-                            /* longitude = */ -0.1273
-                        )
+                    val locations = listOf(
+                        LatLng(51.508021, -0.075971) to "Tower of London",
+                        LatLng(51.517814, -0.1270) to "British Museum",
+                        LatLng(51.503333, -0.119664) to "London Eye",
+                        LatLng(51.50082, -0.143016) to "Buckingham Palace",
+                        LatLng(51.532924, -0.10584) to "Angel Station",
                     )
 
                     val locationPermissions = rememberMultiplePermissionsState(
@@ -111,40 +92,17 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
-                        Clustering(
-                            items = pins.map { ClusterItem(it, "title", "snippet") },
-                            onClusterClick = { _ ->
-                                true
-                            },
-                            onClusterItemClick = { _ ->
-                                true
-                            }
-                        )
+                        for (loc in locations) {
+                            Marker(
+                                state = MarkerState(
+                                    position = loc.first
+                                ),
+                                title = loc.second
+                            )
+                        }
                     }
                 }
             }
         }
-    }
-}
-
-data class ClusterItem(
-    val pos: LatLng,
-    val name: String,
-    val desc: String?
-) : ClusterItem {
-    override fun getPosition(): LatLng {
-        return pos
-    }
-
-    override fun getTitle(): String? {
-        return name
-    }
-
-    override fun getSnippet(): String? {
-        return desc
-    }
-
-    override fun getZIndex(): Float? {
-        return null
     }
 }
