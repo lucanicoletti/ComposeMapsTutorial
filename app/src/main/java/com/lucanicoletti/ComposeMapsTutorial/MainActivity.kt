@@ -43,14 +43,6 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    val locations = listOf(
-                        LatLng(51.508021, -0.075971),
-                        LatLng(51.517814, -0.1270),
-                        LatLng(51.503333, -0.119664),
-                        LatLng(51.50082, -0.143016),
-                        LatLng(51.532924, -0.10584),
-                    )
-
                     val locationPermissions = rememberMultiplePermissionsState(
                         permissions = listOf(
                             "android.permission.ACCESS_FINE_LOCATION",
@@ -93,11 +85,13 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
-                        for (loc in locations) {
+                        for (data in markersData) {
                             Marker(
                                 state = MarkerState(
-                                    position = loc
+                                    position = data.location
                                 ),
+                                title = data.title,
+                                snippet = data.description,
                             )
                         }
                     }
@@ -106,3 +100,38 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+private val markersData = listOf(
+    MarkerData(
+        location = LatLng(51.508021, -0.075971),
+        title = "Tower of London",
+        description = "Nearby Tower Bridge, a beautiful castle in Central London.",
+    ),
+    MarkerData(
+        location = LatLng(51.517814, -0.1270),
+        title = "British Museum",
+        description = "The most famous museum in the city.",
+    ),
+    MarkerData(
+        location = LatLng(51.503333, -0.119664),
+        title = "London Eye",
+        description = "The highest wheel, the iconic Coca-Cola attraction.",
+    ),
+    MarkerData(
+        location = LatLng(51.50082, -0.143016),
+        title = "Buckingham Palace",
+        description = "Where the Royal Family lives.",
+    ),
+    MarkerData(
+        location = LatLng(51.532924, -0.10584),
+        title = "Angel Station",
+        description = "A well-known station in London City Centre.",
+    ),
+)
+
+
+data class MarkerData(
+    val location: LatLng,
+    val title: String,
+    val description: String?
+)
