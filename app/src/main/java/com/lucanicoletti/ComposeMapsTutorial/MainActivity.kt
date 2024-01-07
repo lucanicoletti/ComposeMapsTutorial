@@ -42,12 +42,13 @@ class MainActivity : ComponentActivity() {
                             /* zoom = */ 12f
                         )
                     }
+
                     val locations = listOf(
-                        LatLng(51.508021, -0.075971) to "Tower of London",
-                        LatLng(51.517814, -0.1270) to "British Museum",
-                        LatLng(51.503333, -0.119664) to "London Eye",
-                        LatLng(51.50082, -0.143016) to "Buckingham Palace",
-                        LatLng(51.532924, -0.10584) to "Angel Station",
+                        LatLng(51.508021, -0.075971),
+                        LatLng(51.517814, -0.1270),
+                        LatLng(51.503333, -0.119664),
+                        LatLng(51.50082, -0.143016),
+                        LatLng(51.532924, -0.10584),
                     )
 
                     val locationPermissions = rememberMultiplePermissionsState(
@@ -95,9 +96,8 @@ class MainActivity : ComponentActivity() {
                         for (loc in locations) {
                             Marker(
                                 state = MarkerState(
-                                    position = loc.first
+                                    position = loc
                                 ),
-                                title = loc.second
                             )
                         }
                     }
