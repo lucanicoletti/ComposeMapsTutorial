@@ -9,8 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -88,8 +93,8 @@ class MainActivity : ComponentActivity() {
                     )
 
                     val mapUiSettings = MapUiSettings(
-                        compassEnabled = true,
-                        myLocationButtonEnabled = true,
+                        compassEnabled = false,
+                        myLocationButtonEnabled = false,
                         rotationGesturesEnabled = true,
                         scrollGesturesEnabled = true,
                         scrollGesturesEnabledDuringRotateOrZoom = true,
@@ -112,7 +117,7 @@ class MainActivity : ComponentActivity() {
                                 )
                                 false
                             },
-                            onClusterItemClick = { _ -> false },
+                            onClusterItemClick = { _ -> true },
                             clusterContent = { CustomClusterContent(cluster = it) },
                             clusterItemContent = { CustomClusterContentItem(data = it) }
                         )
@@ -124,13 +129,53 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+fun IconAsClusterContentItem(data: MarkerData) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = data.name,
+            color = Color.Red,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+        )
+        Icon(
+            modifier = Modifier.size(32.dp),
+            imageVector = Icons.Default.LocationOn,
+            contentDescription = "Custom Icon for Cluster",
+            tint = Color.Red,
+        )
+    }
+}
+
+@Composable
+fun IconAsClusterContent(cluster: Cluster<MarkerData>) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = String.format("%d elements", cluster.size),
+            color = Color.Blue,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+        )
+        Icon(
+            modifier = Modifier.size(32.dp),
+            imageVector = Icons.Default.LocationOn,
+            contentDescription = "Custom Icon for Cluster",
+            tint = Color.Blue,
+        )
+    }
+}
+
+@Composable
 fun CustomClusterContent(cluster: Cluster<MarkerData>) {
     val size = cluster.size
     Surface(
         modifier = Modifier
             .width(40.dp)
             .height(20.dp),
-        shape = RoundedCornerShape(8.dp),
+        shape = CircleShape,
         color = Color.Blue,
         contentColor = Color.White,
         border = BorderStroke(1.dp, Color.White)
