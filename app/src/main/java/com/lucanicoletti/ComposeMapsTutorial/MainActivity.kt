@@ -118,8 +118,12 @@ class MainActivity : ComponentActivity() {
                                 false
                             },
                             onClusterItemClick = { _ -> true },
-                            clusterContent = { CustomClusterContent(cluster = it) },
-                            clusterItemContent = { CustomClusterContentItem(data = it) }
+                            clusterContent = {
+                                IconAsClusterContent(cluster = it)
+                            },
+                            clusterItemContent = {
+                                IconAsClusterContentItem(data = it)
+                            }
                         )
                     }
                 }
@@ -172,9 +176,7 @@ fun IconAsClusterContent(cluster: Cluster<MarkerData>) {
 fun CustomClusterContent(cluster: Cluster<MarkerData>) {
     val size = cluster.size
     Surface(
-        modifier = Modifier
-            .width(40.dp)
-            .height(20.dp),
+        modifier = Modifier.size(40.dp),
         shape = CircleShape,
         color = Color.Blue,
         contentColor = Color.White,
