@@ -3,46 +3,30 @@ package com.lucanicoletti.ComposeMapsTutorial
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.ButtCap
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.Dash
+import com.google.android.gms.maps.model.Dot
+import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
+import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
-import com.google.maps.android.compose.clustering.Clustering
+import com.google.maps.android.compose.Polygon
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 
@@ -53,18 +37,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComposeMapsTutorialTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    val locationLondon = LatLng(
-                        /* latitude = */ 51.5072,
-                        /* longitude = */ -0.1276
+                    val locationLondon = LatLng(/* latitude = */ 51.5072,/* longitude = */ -0.1276
                     )
                     val cameraPositionState = rememberCameraPositionState {
-                        this.position = CameraPosition.fromLatLngZoom(
-                            /* target = */ locationLondon,
-                            /* zoom = */ 12f
-                        )
+                        this.position =
+                            CameraPosition.fromLatLngZoom(/* target = */ locationLondon,/* zoom = */
+                                12f
+                            )
                     }
 
                     val locationPermissions = rememberMultiplePermissionsState(
@@ -84,8 +65,7 @@ class MainActivity : ComponentActivity() {
                         isMyLocationEnabled = locationPermissions.allPermissionsGranted,
                         isTrafficEnabled = false,
                         latLngBoundsForCameraTarget = LatLngBounds(
-                            LatLng(51.4728, -0.1687),
-                            LatLng(51.5378, -0.0231)
+                            LatLng(51.4728, -0.1687), LatLng(51.5378, -0.0231)
                         ),
                         mapType = MapType.TERRAIN,
                         maxZoomPreference = 21f,
@@ -109,21 +89,58 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
-                        Clustering(
-                            items = markersData,
-                            onClusterClick = {
-                                cameraPositionState.move(
-                                    CameraUpdateFactory.zoomIn()
-                                )
-                                false
-                            },
-                            onClusterItemClick = { _ -> true },
-                            clusterContent = {
-                                IconAsClusterContent(cluster = it)
-                            },
-                            clusterItemContent = {
-                                IconAsClusterContentItem(data = it)
-                            }
+                        Circle(
+                            center = LatLng(51.508021, -0.075971), // Tower of London
+                            clickable = false,
+                            fillColor = Color.Blue.copy(alpha = 0.5f),
+                            radius = 50.0,
+                            strokeColor = Color.White,
+                            strokePattern = null,
+                            strokeWidth = 1f,
+                            tag = "",
+                            visible = true,
+                            zIndex = 1f,
+                            onClick = {},
+                        )
+
+                        Polygon(
+                            points = listOf(
+                                LatLng(51.503333, -0.119664),
+                                LatLng(51.50082, -0.143016),
+                                LatLng(51.517814, -0.1270),
+                            ),
+                            clickable = false,
+                            fillColor = Color.Red.copy(alpha = 0.5f),
+                            geodesic = false,
+                            holes = emptyList(),
+                            strokeColor = Color.White,
+                            strokeJointType = JointType.DEFAULT,
+                            strokePattern = listOf(Dash(3f)),
+                            strokeWidth = 10f,
+                            tag = "tags",
+                            visible = true,
+                            zIndex = 1f,
+                            onClick = {},
+                        )
+
+                        Polyline(
+                            points = listOf(
+                                LatLng(51.517814, -0.1270),
+                                LatLng(51.532924, -0.10584),
+                                LatLng(51.508021, -0.075971)
+                            ),
+                            clickable = false,
+                            color = Color.Green.copy(alpha = 0.8f),
+                            endCap = ButtCap(),
+                            geodesic = false,
+                            jointType = JointType.ROUND,
+                            pattern = listOf(Dash(55f), Dot()),
+                            startCap = ButtCap(),
+                            tag = "line!",
+                            visible = true,
+                            width = 15f,
+                            zIndex = 1f,
+                            onClick = {},
                         )
                     }
                 }
@@ -132,104 +149,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun IconAsClusterContentItem(data: MarkerData) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = data.name,
-            color = Color.Red,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-        )
-        Icon(
-            modifier = Modifier.size(32.dp),
-            imageVector = Icons.Default.LocationOn,
-            contentDescription = "Custom Icon for Cluster",
-            tint = Color.Red,
-        )
-    }
-}
-
-@Composable
-fun IconAsClusterContent(cluster: Cluster<MarkerData>) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = String.format("%d elements", cluster.size),
-            color = Color.Blue,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-        )
-        Icon(
-            modifier = Modifier.size(32.dp),
-            imageVector = Icons.Default.LocationOn,
-            contentDescription = "Custom Icon for Cluster",
-            tint = Color.Blue,
-        )
-    }
-}
-
-@Composable
-fun CustomClusterContent(cluster: Cluster<MarkerData>) {
-    val size = cluster.size
-    Surface(
-        modifier = Modifier.size(40.dp),
-        shape = CircleShape,
-        color = Color.Blue,
-        contentColor = Color.White,
-        border = BorderStroke(1.dp, Color.White)
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                size.toString(),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Black,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-@Composable
-fun CustomClusterContentItem(data: MarkerData) {
-    Surface(
-        modifier = Modifier
-            .width(80.dp)
-            .height(40.dp),
-        shape = RoundedCornerShape(8.dp),
-        color = Color.Red,
-        contentColor = Color.White,
-        border = BorderStroke(1.dp, Color.White)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(2.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                data.name,
-                fontSize = 12.sp,
-                lineHeight = 12.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            data.snippet?.let {
-                Text(
-                    modifier = Modifier.padding(top = 2.dp),
-                    text = it,
-                    fontSize = 8.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontWeight = FontWeight.Light,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-    }
-}
 
 private val markersData = listOf(
     MarkerData(
@@ -263,7 +182,6 @@ private val markersData = listOf(
         imageResourceId = R.drawable.angel,
     ),
 )
-
 
 data class MarkerData(
     val location: LatLng,

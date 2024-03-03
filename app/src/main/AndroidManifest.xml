@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -29,7 +29,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyADSRxefjdqWyjr-E-Ilgsike1x-BH9PHY" />
+            android:value="AIzaSyD50gvrRrGU-2muFWSN3efKXTzEbLTkw3c" />
     </application>
 
 </manifest>
