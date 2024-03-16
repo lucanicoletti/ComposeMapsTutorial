@@ -1,5 +1,9 @@
 package com.lucanicoletti.ComposeMapsTutorial
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,9 +13,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.ButtCap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.Dash
@@ -21,6 +30,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.GroundOverlay
+import com.google.maps.android.compose.GroundOverlayPosition
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
@@ -82,6 +93,7 @@ class MainActivity : ComponentActivity() {
                         zoomControlsEnabled = false,
                         zoomGesturesEnabled = true,
                     )
+                    val context = LocalContext.current
 
                     GoogleMap(
                         modifier = Modifier.fillMaxSize(),
@@ -89,10 +101,37 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
+                        GroundOverlay(
+                            position = GroundOverlayPosition.create(
+                                location = LatLng(51.50082, -0.143016),
+                                width = 7030f,
+                                height = 3550f,
+                            ),
+                            anchor = Offset.Zero,
+                            bearing = -35f,
+                            image = drawableToBitmapDescriptor(
+                                context,
+                                R.drawable.overground_underground
+                            )
+                        )
                     }
                 }
             }
         }
+    }
+}
+
+fun drawableToBitmapDescriptor(context: Context, drawableId: Int): BitmapDescriptor {
+    val drawable: Drawable? = ContextCompat.getDrawable(context, drawableId)
+    drawable?.let {
+        val bitmap: Bitmap =
+            Bitmap.createBitmap(it.intrinsicWidth, it.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        it.setBounds(0, 0, canvas.width, canvas.height)
+        it.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+    } ?: run {
+        throw IllegalArgumentException("Drawable not found")
     }
 }
 
