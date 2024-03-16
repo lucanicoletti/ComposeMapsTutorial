@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,7 +19,6 @@ import com.google.android.gms.maps.model.Dot
 import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
@@ -89,59 +89,6 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
-                        Circle(
-                            center = LatLng(51.508021, -0.075971), // Tower of London
-                            clickable = false,
-                            fillColor = Color.Blue.copy(alpha = 0.5f),
-                            radius = 50.0,
-                            strokeColor = Color.White,
-                            strokePattern = null,
-                            strokeWidth = 1f,
-                            tag = "",
-                            visible = true,
-                            zIndex = 1f,
-                            onClick = {},
-                        )
-
-                        Polygon(
-                            points = listOf(
-                                LatLng(51.503333, -0.119664),
-                                LatLng(51.50082, -0.143016),
-                                LatLng(51.517814, -0.1270),
-                            ),
-                            clickable = false,
-                            fillColor = Color.Red.copy(alpha = 0.5f),
-                            geodesic = false,
-                            holes = emptyList(),
-                            strokeColor = Color.White,
-                            strokeJointType = JointType.DEFAULT,
-                            strokePattern = listOf(Dash(3f)),
-                            strokeWidth = 10f,
-                            tag = "tags",
-                            visible = true,
-                            zIndex = 1f,
-                            onClick = {},
-                        )
-
-                        Polyline(
-                            points = listOf(
-                                LatLng(51.517814, -0.1270),
-                                LatLng(51.532924, -0.10584),
-                                LatLng(51.508021, -0.075971)
-                            ),
-                            clickable = false,
-                            color = Color.Green.copy(alpha = 0.8f),
-                            endCap = ButtCap(),
-                            geodesic = false,
-                            jointType = JointType.ROUND,
-                            pattern = listOf(Dash(55f), Dot()),
-                            startCap = ButtCap(),
-                            tag = "line!",
-                            visible = true,
-                            width = 15f,
-                            zIndex = 1f,
-                            onClick = {},
-                        )
                     }
                 }
             }
@@ -149,52 +96,91 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun DrawingsOnMaps() {
+    Circle(
+        center = circleCentre,
+        clickable = false,
+        fillColor = Color.Blue.copy(alpha = 0.5f),
+        radius = 50.0,
+        strokeColor = Color.White,
+        strokePattern = null,
+        strokeWidth = 1f,
+        tag = "circle",
+        visible = true,
+        zIndex = 1f,
+        onClick = {},
+    )
 
-private val markersData = listOf(
-    MarkerData(
-        location = LatLng(51.508021, -0.075971),
-        name = "Tower of London",
-        description = "Nearby Tower Bridge, a beautiful castle in Central London.",
-        imageResourceId = R.drawable.tower,
-    ),
-    MarkerData(
-        location = LatLng(51.517814, -0.1270),
-        name = "British Museum",
-        description = "The most famous museum in the city.",
-        imageResourceId = R.drawable.museum,
-    ),
-    MarkerData(
-        location = LatLng(51.503333, -0.119664),
-        name = "London Eye",
-        description = "The highest wheel, the iconic Coca-Cola attraction.",
-        imageResourceId = R.drawable.eye,
-    ),
-    MarkerData(
-        location = LatLng(51.50082, -0.143016),
-        name = "Buckingham Palace",
-        description = "Where the Royal Family lives.",
-        imageResourceId = R.drawable.palace,
-    ),
-    MarkerData(
-        location = LatLng(51.532924, -0.10584),
-        name = "Angel Station",
-        description = "A well-known station in London City Centre.",
-        imageResourceId = R.drawable.angel,
-    ),
+    Polygon(
+        points = locationsForPolygon,
+        clickable = false,
+        fillColor = Color.Red.copy(alpha = 0.5f),
+        geodesic = false,
+        holes = emptyList(),
+        strokeColor = Color.White,
+        strokeJointType = JointType.DEFAULT,
+        strokePattern = listOf(Dash(3f)),
+        strokeWidth = 10f,
+        tag = "polygon",
+        visible = true,
+        zIndex = 1f,
+        onClick = {},
+    )
+
+    Polyline(
+        points = locationsForPolyline,
+        clickable = false,
+        color = Color.Green.copy(alpha = 0.8f),
+        endCap = ButtCap(),
+        geodesic = false,
+        jointType = JointType.ROUND,
+        pattern = listOf(Dash(55f), Dot()),
+        startCap = ButtCap(),
+        tag = "line!",
+        visible = true,
+        width = 15f,
+        zIndex = 1f,
+        onClick = {},
+    )
+}
+
+val locationsForPolyline = listOf(
+    LatLng(51.517814, -0.1270), // British Museum
+    LatLng(51.532924, -0.10584), // Angel Station
+    LatLng(51.508021, -0.075971) // Tower of London
 )
 
-data class MarkerData(
-    val location: LatLng,
-    val name: String,
-    val description: String?,
-    val imageResourceId: Int? = null,
-) : ClusterItem {
-    override fun getPosition(): LatLng = location
+val locationsForPolygon = listOf(
+    LatLng(51.503333, -0.119664), // London Eye
+    LatLng(51.50082, -0.143016), // Buckingham Palace
+    LatLng(51.517814, -0.1270), // British Museum
+)
 
-    override fun getTitle(): String? = name
+val circleCentre = LatLng(51.508021, -0.075971) // Tower of London
 
-    override fun getSnippet(): String? = description
-
-    override fun getZIndex(): Float? = 1f
-
+@Composable
+fun PolygonAlter() {
+    Polygon(
+        points = locationsForPolygonAlter,
+        clickable = false,
+        fillColor = Color.DarkGray.copy(alpha = 0.5f),
+        geodesic = false,
+        holes = emptyList(),
+        strokeColor = Color.Black,
+        strokeJointType = JointType.DEFAULT,
+        strokePattern = listOf(Dot()),
+        strokeWidth = 10f,
+        tag = "polygon 2",
+        visible = true,
+        zIndex = 1.5f,
+        onClick = {},
+    )
 }
+
+val locationsForPolygonAlter = listOf(
+    LatLng(51.517814, -0.1270), // British Museum
+    LatLng(51.503333, -0.119664), // London Eye
+    LatLng(51.50082, -0.143016), // Buckingham Palace
+    LatLng(51.513109, -0.158969), // ~Marble Arch
+)
