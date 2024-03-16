@@ -103,16 +103,16 @@ class MainActivity : ComponentActivity() {
                     ) {
                         GroundOverlay(
                             position = GroundOverlayPosition.create(
-                                location = LatLng(51.50082, -0.143016),
-                                width = 7030f,
-                                height = 3550f,
+                                location = LatLng(51.697892, -0.521313),
+                                width = 59782f,
+                                height = 46221f,
                             ),
                             anchor = Offset.Zero,
-                            bearing = -35f,
                             image = drawableToBitmapDescriptor(
                                 context,
-                                R.drawable.overground_underground
-                            )
+                                R.drawable.overlay2
+                            ),
+                            transparency = 0.5f
                         )
                     }
                 }
@@ -129,6 +129,7 @@ fun drawableToBitmapDescriptor(context: Context, drawableId: Int): BitmapDescrip
         val canvas = Canvas(bitmap)
         it.setBounds(0, 0, canvas.width, canvas.height)
         it.draw(canvas)
+        canvas.scale(15f, 15f)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     } ?: run {
         throw IllegalArgumentException("Drawable not found")
