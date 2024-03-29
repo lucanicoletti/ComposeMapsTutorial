@@ -100,8 +100,8 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
-//                        GroundOverlayWithColouredAreas()
 //                        GroundOverlayBoroughs()
+//                        GroundOverlayWithColouredAreas()
                         GroundOverlayUnderground()
                     }
                 }
@@ -124,7 +124,7 @@ fun GroundOverlayWithColouredAreas() {
             context,
             R.drawable.overlay2
         ),
-        transparency = 0.5f
+        transparency = 0f
     )
 }
 
@@ -152,8 +152,8 @@ fun GroundOverlayUnderground() {
     GroundOverlay(
         position = GroundOverlayPosition.create(
             latLngBounds = LatLngBounds(
-                LatLng(51.493684, -0.224643),
-                LatLng(51.527323, -0.056233),
+                /* southwest = */ LatLng(51.493684, -0.224643),
+                /* northeast = */ LatLng(51.527323, -0.056233),
             )
         ),
         anchor = Offset.Zero,
