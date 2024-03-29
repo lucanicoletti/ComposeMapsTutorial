@@ -93,7 +93,6 @@ class MainActivity : ComponentActivity() {
                         zoomControlsEnabled = false,
                         zoomGesturesEnabled = true,
                     )
-                    val context = LocalContext.current
 
                     GoogleMap(
                         modifier = Modifier.fillMaxSize(),
@@ -101,19 +100,8 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
-                        GroundOverlay(
-                            position = GroundOverlayPosition.create(
-                                location = LatLng(51.697892, -0.521313),
-                                width = 59782f,
-                                height = 46221f,
-                            ),
-                            anchor = Offset.Zero,
-                            image = drawableToBitmapDescriptor(
-                                context,
-                                R.drawable.overlay2
-                            ),
-                            transparency = 0.5f
-                        )
+//                        GroundOverlayWithColouredAreas()
+                        GroundOverlayBoroughs()
                     }
                 }
             }
@@ -121,15 +109,58 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun GroundOverlayWithColouredAreas() {
+    val context = LocalContext.current
+    GroundOverlay(
+        position = GroundOverlayPosition.create(
+            location = LatLng(51.697890, -0.521313),
+            width = 59782f,
+            height = 46221f,
+        ),
+        anchor = Offset.Zero,
+        image = drawableToBitmapDescriptor(
+            context,
+            R.drawable.overlay2
+        ),
+        transparency = 0.5f
+    )
+}
+
+@Composable
+fun GroundOverlayBoroughs() {
+    val context = LocalContext.current
+    GroundOverlay(
+        position = GroundOverlayPosition.create(
+            location = LatLng(51.697890, -0.521313),
+            width = 59782f,
+            height = 46221f,
+        ),
+        anchor = Offset.Zero,
+        image = drawableToBitmapDescriptor(
+            context,
+            R.drawable.overlay3
+        ),
+    )
+}
+
 fun drawableToBitmapDescriptor(context: Context, drawableId: Int): BitmapDescriptor {
-    val drawable: Drawable? = ContextCompat.getDrawable(context, drawableId)
-    drawable?.let {
-        val bitmap: Bitmap =
-            Bitmap.createBitmap(it.intrinsicWidth, it.intrinsicHeight, Bitmap.Config.ARGB_8888)
+    val drawableResource: Drawable? = ContextCompat.getDrawable(context, drawableId)
+    drawableResource?.let { drawable ->
+        val width = drawable.intrinsicWidth
+        val height = drawable.intrinsicHeight
+
+        val bitmap: Bitmap = Bitmap.createBitmap(
+            width,
+            height,
+            Bitmap.Config.ARGB_8888
+        )
+
         val canvas = Canvas(bitmap)
-        it.setBounds(0, 0, canvas.width, canvas.height)
-        it.draw(canvas)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
         canvas.scale(15f, 15f)
+
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     } ?: run {
         throw IllegalArgumentException("Drawable not found")
