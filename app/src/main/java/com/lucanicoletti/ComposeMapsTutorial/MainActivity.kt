@@ -101,7 +101,8 @@ class MainActivity : ComponentActivity() {
                         uiSettings = mapUiSettings,
                     ) {
 //                        GroundOverlayWithColouredAreas()
-                        GroundOverlayBoroughs()
+//                        GroundOverlayBoroughs()
+                        GroundOverlayUnderground()
                     }
                 }
             }
@@ -141,6 +142,26 @@ fun GroundOverlayBoroughs() {
             context,
             R.drawable.overlay3
         ),
+        transparency = 0.5f,
+    )
+}
+
+@Composable
+fun GroundOverlayUnderground() {
+    val context = LocalContext.current
+    GroundOverlay(
+        position = GroundOverlayPosition.create(
+            latLngBounds = LatLngBounds(
+                LatLng(51.493684, -0.224643),
+                LatLng(51.527323, -0.056233),
+            )
+        ),
+        anchor = Offset.Zero,
+        image = drawableToBitmapDescriptor(
+            context,
+            R.drawable.overlay1
+        ),
+        transparency = 0.5f,
     )
 }
 
