@@ -11,8 +11,6 @@ import com.google.android.gms.maps.model.TileProvider
 import java.io.ByteArrayOutputStream
 
 class CoordTileProvider(context: Context) : TileProvider {
-    /* Scale factor based on density, with a 0.6 multiplier to increase tile generation
-     * speed */
     private val scaleFactor: Float = context.resources.displayMetrics.density * 0.6f
     private val borderTile: Bitmap
     override fun getTile(x: Int, y: Int, zoom: Int): Tile {
@@ -24,17 +22,14 @@ class CoordTileProvider(context: Context) : TileProvider {
             (TILE_SIZE_DP * scaleFactor).toInt(),
             (TILE_SIZE_DP * scaleFactor).toInt(), bitmapData
         )
-        Tile.NULL
     }
 
     private fun drawTileCoords(x: Int, y: Int, zoom: Int): Bitmap? {
-        // Synchronize copying the bitmap to avoid a race condition in some devices.
         var copy: Bitmap?
         synchronized(borderTile) { copy = borderTile.copy(Bitmap.Config.ARGB_8888, true) }
         val canvas = Canvas(copy!!)
         val tileCoords = "($x, $y)"
         val zoomLevel = "zoom = $zoom"
-        /* Paint is not thread safe. */
         val mTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mTextPaint.color = Color.Blue.toArgb()
         mTextPaint.textAlign = Paint.Align.CENTER

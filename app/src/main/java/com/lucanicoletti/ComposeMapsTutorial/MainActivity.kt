@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
@@ -41,10 +40,10 @@ class MainActivity : ComponentActivity() {
                         isBuildingEnabled = false,
                         isIndoorEnabled = false,
                         isTrafficEnabled = false,
-                        mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
-                            LocalContext.current,
-                            R.raw.map_style
-                        ),
+//                        mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
+//                            LocalContext.current,
+//                            R.raw.map_style
+//                        ),
                         maxZoomPreference = 21f,
                         minZoomPreference = 3f,
                     )
@@ -67,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         uiSettings = mapUiSettings,
                     ) {
                         CoordTileOverlay()
-                        UrlTileOverlay()
+//                        UrlTileOverlay()
                     }
                 }
             }
