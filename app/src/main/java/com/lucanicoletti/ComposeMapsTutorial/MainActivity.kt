@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -39,10 +38,8 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
-import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 
@@ -87,14 +84,14 @@ class MainActivity : ComponentActivity() {
                             LatLng(51.4728, -0.1687),
                             LatLng(51.5378, -0.0231)
                         ),
-                        mapType = MapType.TERRAIN,
                         maxZoomPreference = 21f,
                         minZoomPreference = 3f,
                     )
 
                     val mapUiSettings = MapUiSettings(
-                        compassEnabled = false,
-                        myLocationButtonEnabled = false,
+                        compassEnabled = true,
+                        myLocationButtonEnabled = true,
+                        mapToolbarEnabled = true,
                         rotationGesturesEnabled = true,
                         scrollGesturesEnabled = true,
                         scrollGesturesEnabledDuringRotateOrZoom = true,
@@ -109,22 +106,7 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
-                        Clustering(
-                            items = markersData,
-                            onClusterClick = {
-                                cameraPositionState.move(
-                                    CameraUpdateFactory.zoomIn()
-                                )
-                                false
-                            },
-                            onClusterItemClick = { _ -> true },
-                            clusterContent = {
-                                IconAsClusterContent(cluster = it)
-                            },
-                            clusterItemContent = {
-                                IconAsClusterContentItem(data = it)
-                            }
-                        )
+
                     }
                 }
             }
