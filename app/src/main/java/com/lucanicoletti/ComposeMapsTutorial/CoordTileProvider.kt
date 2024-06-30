@@ -31,7 +31,8 @@ class CoordTileProvider(context: Context) : TileProvider {
         val tileCoords = "($x, $y)"
         val zoomLevel = "zoom = $zoom"
         val mTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        mTextPaint.color = Color.Blue.toArgb()
+        mTextPaint.color = Color.Red.toArgb()
+        mTextPaint.strokeWidth = 3f
         mTextPaint.textAlign = Paint.Align.CENTER
         mTextPaint.textSize = 18 * scaleFactor
         canvas.drawText(
