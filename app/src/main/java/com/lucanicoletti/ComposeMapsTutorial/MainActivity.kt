@@ -40,6 +40,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
+import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 
@@ -106,7 +107,7 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
-
+                        Polygon(points = markersData.map { it.position })
                     }
                 }
             }
@@ -221,12 +222,6 @@ private val markersData = listOf(
         imageResourceId = R.drawable.tower,
     ),
     MarkerData(
-        location = LatLng(51.517814, -0.1270),
-        name = "British Museum",
-        description = "The most famous museum in the city.",
-        imageResourceId = R.drawable.museum,
-    ),
-    MarkerData(
         location = LatLng(51.503333, -0.119664),
         name = "London Eye",
         description = "The highest wheel, the iconic Coca-Cola attraction.",
@@ -237,6 +232,12 @@ private val markersData = listOf(
         name = "Buckingham Palace",
         description = "Where the Royal Family lives.",
         imageResourceId = R.drawable.palace,
+    ),
+    MarkerData(
+        location = LatLng(51.517814, -0.1270),
+        name = "British Museum",
+        description = "The most famous museum in the city.",
+        imageResourceId = R.drawable.museum,
     ),
     MarkerData(
         location = LatLng(51.532924, -0.10584),
