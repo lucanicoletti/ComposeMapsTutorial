@@ -60,8 +60,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
-    implementation("com.google.maps.android:maps-compose:4.3.0")
-    implementation("com.google.maps.android:maps-compose-utils:4.3.0")
+    implementation("com.google.maps.android:maps-compose:5.0.4")
+    implementation("com.google.maps.android:maps-compose-utils:5.0.4")
     implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha")
 
     testImplementation("junit:junit:4.13.2")

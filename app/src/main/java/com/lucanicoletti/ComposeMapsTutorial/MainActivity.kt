@@ -11,20 +11,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.ButtCap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.Dash
 import com.google.android.gms.maps.model.Dot
+import com.google.android.gms.maps.model.Gap
 import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -32,17 +30,12 @@ import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.GroundOverlay
 import com.google.maps.android.compose.GroundOverlayPosition
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapType
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalPermissionsApi::class, MapsComposeExperimentalApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -55,54 +48,46 @@ class MainActivity : ComponentActivity() {
                     val cameraPositionState = rememberCameraPositionState {
                         this.position =
                             CameraPosition.fromLatLngZoom(/* target = */ locationLondon,/* zoom = */
-                                12f
+                                13f
                             )
                     }
-
-                    val locationPermissions = rememberMultiplePermissionsState(
-                        permissions = listOf(
-                            "android.permission.ACCESS_FINE_LOCATION",
-                            "android.permission.ACCESS_COARSE_LOCATION"
-                        ),
-                    )
-
-                    LaunchedEffect(key1 = locationPermissions.permissions) {
-                        locationPermissions.launchMultiplePermissionRequest()
-                    }
-
-                    val mapProperties = MapProperties(
-                        isBuildingEnabled = false,
-                        isIndoorEnabled = false,
-                        isMyLocationEnabled = locationPermissions.allPermissionsGranted,
-                        isTrafficEnabled = false,
-                        latLngBoundsForCameraTarget = LatLngBounds(
-                            LatLng(51.4728, -0.1687), LatLng(51.5378, -0.0231)
-                        ),
-                        mapType = MapType.TERRAIN,
-                        maxZoomPreference = 21f,
-                        minZoomPreference = 3f,
-                    )
-
-                    val mapUiSettings = MapUiSettings(
-                        compassEnabled = false,
-                        myLocationButtonEnabled = false,
-                        rotationGesturesEnabled = true,
-                        scrollGesturesEnabled = true,
-                        scrollGesturesEnabledDuringRotateOrZoom = true,
-                        tiltGesturesEnabled = true,
-                        zoomControlsEnabled = false,
-                        zoomGesturesEnabled = true,
-                    )
 
                     GoogleMap(
                         modifier = Modifier.fillMaxSize(),
                         cameraPositionState = cameraPositionState,
-                        properties = mapProperties,
-                        uiSettings = mapUiSettings,
                     ) {
-//                        GroundOverlayBoroughs()
-//                        GroundOverlayWithColouredAreas()
                         GroundOverlayUnderground()
+                        val polygonPoints = listOf(
+                            LatLng(51.508021, -0.075971),
+                            LatLng(51.483333, -0.119664),
+                            LatLng(51.50082, -0.143016),
+                            LatLng(51.517814, -0.1270),
+                            LatLng(51.532924, -0.10584),
+                        )
+                        val polygonHole1 = listOf(
+                            LatLng(51.503615, -0.118864),
+                            LatLng(51.504942, -0.120934),
+                            LatLng(51.501602, -0.121148),
+                            LatLng(51.502439, -0.117604),
+                        )
+                        val polygonHole2 = listOf(
+                            LatLng(51.510083, -0.108681),
+                            LatLng(51.509483, -0.099916),
+                            LatLng(51.513767, -0.099318),
+                            LatLng(51.513568, -0.108818),
+                        )
+                        val polygonHole4 = listOf(
+                            LatLng(51.517909, -0.125179),
+                            LatLng(51.520447, -0.132289),
+                            LatLng(51.522756, -0.126417),
+                        )
+                        Polygon(
+                            points = polygonPoints,
+                            holes = listOf(polygonHole1, polygonHole2, polygonHole4),
+                            strokeColor = Color.Red,
+                            strokeWidth = 10f,
+                            strokePattern = listOf(Dash(20f), Gap(20f))
+                        )
                     }
                 }
             }
@@ -128,6 +113,23 @@ fun GroundOverlayWithColouredAreas() {
     )
 }
 
+private val polylinesPoints = listOf(
+    LatLng(51.508021, -0.075971),
+    LatLng(51.503333, -0.119664),
+    LatLng(51.50082, -0.143016),
+    LatLng(51.517814, -0.1270),
+    LatLng(51.532924, -0.10584),
+)
+
+
+private val polygonPoints = listOf(
+    LatLng(51.508021, -0.075971),
+    LatLng(51.483333, -0.119664),
+    LatLng(51.50082, -0.143016),
+    LatLng(51.517814, -0.1270),
+    LatLng(51.532924, -0.10584),
+)
+
 @Composable
 fun GroundOverlayBoroughs() {
     val context = LocalContext.current
@@ -145,6 +147,26 @@ fun GroundOverlayBoroughs() {
         transparency = 0.5f,
     )
 }
+
+private val polygonHole1 = listOf(
+    LatLng(51.503615, -0.118864),
+    LatLng(51.504942, -0.120934),
+    LatLng(51.501602, -0.121148),
+    LatLng(51.502439, -0.117604),
+)
+
+private val polygonHole2 = listOf(
+    LatLng(51.510083, -0.108681),
+    LatLng(51.509483, -0.099916),
+    LatLng(51.513767, -0.099318),
+    LatLng(51.513568, -0.108818),
+)
+
+private val polygonHole3 = listOf(
+    LatLng(51.523177, -0.085425),
+    LatLng(51.523130, -0.057539),
+    LatLng(51.531447, -0.080040),
+)
 
 @Composable
 fun GroundOverlayUnderground() {
@@ -187,6 +209,12 @@ fun drawableToBitmapDescriptor(context: Context, drawableId: Int): BitmapDescrip
         throw IllegalArgumentException("Drawable not found")
     }
 }
+
+private val polygonHole4 = listOf(
+    LatLng(51.517909, -0.125179),
+    LatLng(51.520447, -0.132289),
+    LatLng(51.522756, -0.126417),
+)
 
 @Composable
 fun DrawingsOnMaps() {
@@ -237,10 +265,25 @@ fun DrawingsOnMaps() {
     )
 }
 
+private val polylinesColors = listOf(
+    Color.Red,
+    Color.Yellow,
+    Color.Green,
+    Color.Cyan
+)
+
 val locationsForPolyline = listOf(
     LatLng(51.517814, -0.1270), // British Museum
     LatLng(51.532924, -0.10584), // Angel Station
     LatLng(51.508021, -0.075971) // Tower of London
+)
+
+private val polylinesColorPairs = listOf(
+    Color.Red to Color.Yellow,
+    Color.Yellow to Color.Green,
+    Color.Green to Color.Cyan,
+    Color.Cyan to Color.Blue,
+    Color.Blue to Color.Magenta,
 )
 
 val locationsForPolygon = listOf(
