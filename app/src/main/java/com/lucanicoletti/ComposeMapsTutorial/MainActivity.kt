@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,23 +28,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
-import com.google.maps.android.compose.Polygon
+import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalPermissionsApi::class, MapsComposeExperimentalApi::class)
+    @OptIn(MapsComposeExperimentalApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -54,10 +49,35 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
+
                     val locationLondon = LatLng(
-                        /* latitude = */ 51.5072,
-                        /* longitude = */ -0.1276
+                        /* latitude = */ 51.48725,
+                        /* longitude = */ -0.12768
                     )
+
+                    val positions = mutableListOf<LatLng>()
+                    for (i in 0..10) {
+                        val deltaX = Random.nextDouble(0.0, 0.05)
+                        val deltaY = Random.nextDouble(0.0, 0.05)
+                        positions.add(
+                            LatLng(
+                                locationLondon.latitude + deltaX,
+                                locationLondon.longitude + deltaY
+                            )
+                        )
+                    }
+                    for (i in 0..10) {
+                        val deltaX = Random.nextDouble(0.0, 0.05)
+                        val deltaY = Random.nextDouble(0.0, 0.05)
+                        positions.add(
+                            LatLng(
+                                locationLondon.latitude - deltaX,
+                                locationLondon.longitude - deltaY
+                            )
+                        )
+                    }
+                    val markerItems = positions.map { ClusterItemImpl(it) }
                     val cameraPositionState = rememberCameraPositionState {
                         this.position = CameraPosition.fromLatLngZoom(
                             /* target = */ locationLondon,
@@ -65,49 +85,11 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    val locationPermissions = rememberMultiplePermissionsState(
-                        permissions = listOf(
-                            "android.permission.ACCESS_FINE_LOCATION",
-                            "android.permission.ACCESS_COARSE_LOCATION"
-                        ),
-                    )
-
-                    LaunchedEffect(key1 = locationPermissions.permissions) {
-                        locationPermissions.launchMultiplePermissionRequest()
-                    }
-
-                    val mapProperties = MapProperties(
-                        isBuildingEnabled = false,
-                        isIndoorEnabled = false,
-                        isMyLocationEnabled = locationPermissions.allPermissionsGranted,
-                        isTrafficEnabled = false,
-                        latLngBoundsForCameraTarget = LatLngBounds(
-                            LatLng(51.4728, -0.1687),
-                            LatLng(51.5378, -0.0231)
-                        ),
-                        maxZoomPreference = 21f,
-                        minZoomPreference = 3f,
-                    )
-
-                    val mapUiSettings = MapUiSettings(
-                        compassEnabled = true,
-                        myLocationButtonEnabled = true,
-                        mapToolbarEnabled = true,
-                        rotationGesturesEnabled = true,
-                        scrollGesturesEnabled = true,
-                        scrollGesturesEnabledDuringRotateOrZoom = true,
-                        tiltGesturesEnabled = true,
-                        zoomControlsEnabled = false,
-                        zoomGesturesEnabled = true,
-                    )
-
                     GoogleMap(
                         modifier = Modifier.fillMaxSize(),
                         cameraPositionState = cameraPositionState,
-                        properties = mapProperties,
-                        uiSettings = mapUiSettings,
                     ) {
-                        Polygon(points = markersData.map { it.position })
+                        Clustering(items = markerItems)
                     }
                 }
             }
@@ -246,6 +228,17 @@ private val markersData = listOf(
         imageResourceId = R.drawable.angel,
     ),
 )
+
+
+data class ClusterItemImpl(val location: LatLng) : ClusterItem {
+    override fun getPosition(): LatLng = location
+
+    override fun getTitle(): String? = null
+
+    override fun getSnippet(): String? = null
+
+    override fun getZIndex(): Float? = null
+}
 
 
 data class MarkerData(
