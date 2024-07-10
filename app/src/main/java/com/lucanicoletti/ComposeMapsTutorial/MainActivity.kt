@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,9 +33,11 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
+import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.clustering.Clustering
+import com.google.maps.android.compose.clustering.rememberClusterManager
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
 import kotlin.random.Random
@@ -49,13 +52,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
-
                     val locationLondon = LatLng(
                         /* latitude = */ 51.48725,
                         /* longitude = */ -0.12768
                     )
-
                     val positions = mutableListOf<LatLng>()
                     for (i in 0..10) {
                         val deltaX = Random.nextDouble(0.0, 0.05)
@@ -85,11 +85,27 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
+                    val configuration = LocalConfiguration.current
+                    val screenHeight = configuration.screenHeightDp.dp
+                    val screenWidth = configuration.screenWidthDp.dp
+
                     GoogleMap(
                         modifier = Modifier.fillMaxSize(),
                         cameraPositionState = cameraPositionState,
                     ) {
-                        Clustering(items = markerItems)
+                        val clusterManager = rememberClusterManager<ClusterItemImpl>()
+
+                        // Here the clusterManager is being customized with a NonHierarchicalViewBasedAlgorithm.
+                        // This speeds up by a factor the rendering of items on the screen.
+                        clusterManager?.setAlgorithm(
+                            NonHierarchicalViewBasedAlgorithm(
+                                screenWidth.value.toInt(),
+                                screenHeight.value.toInt()
+                            )
+                        )
+                        if (clusterManager != null) {
+                            Clustering(items = markerItems, clusterManager = clusterManager)
+                        }
                     }
                 }
             }
