@@ -1,6 +1,7 @@
 package com.lucanicoletti.ComposeMapsTutorial
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
+import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm
 import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import com.google.maps.android.compose.GoogleMap
@@ -72,7 +75,6 @@ class MainActivity : ComponentActivity() {
                             )
                         )
                     }
-                    val markerItems = positions.map { ClusterItemImpl(it) }
                     val cameraPositionState = rememberCameraPositionState {
                         this.position = CameraPosition.fromLatLngZoom(
                             /* target = */ locationLondon,
@@ -88,9 +90,6 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         cameraPositionState = cameraPositionState,
                     ) {
-
-                        val clusterManager = rememberClusterManager<ClusterItemImpl>()
-
                         val nonHierarchicalViewBasedAlgorithm =
                             NonHierarchicalViewBasedAlgorithm<ClusterItemImpl>(
                                 screenWidth.value.toInt(),
@@ -98,31 +97,49 @@ class MainActivity : ComponentActivity() {
                             )
                         val distanceBasedAlgorithm =
                             NonHierarchicalDistanceBasedAlgorithm<ClusterItemImpl>().apply {
-                                setMaxDistanceBetweenClusteredItems(200)
+                                setMaxDistanceBetweenClusteredItems(150)
                             }
-
-                        clusterManager?.algorithm = nonHierarchicalViewBasedAlgorithm
-
-                        if (clusterManager != null) {
+                        val clusterManager = rememberClusterManager<ClusterItemImpl>()
+                        clusterManager?.let { manager ->
                             val renderer = rememberClusterRenderer(
-                                clusterManager = clusterManager,
-                                clusterContent = { cluster ->
-                                    IconAsClusterContent(
-                                        cluster = cluster
-                                    )
-                                },
-                                clusterItemContent = { IconAsClusterContentItem(data = it) },
+                                clusterContent = { IconAsClusterContent(it) },
+                                clusterItemContent = { IconAsClusterContentItem(it) },
+                                clusterManager = manager,
                             )
+                            manager.algorithm = distanceBasedAlgorithm
                             SideEffect {
-                                if (clusterManager?.renderer != renderer) {
-                                    clusterManager?.renderer = renderer ?: return@SideEffect
+                                if (manager.renderer != renderer) {
+                                    manager.renderer = renderer ?: return@SideEffect
                                 }
                             }
-                            Clustering(items = markerItems, clusterManager = clusterManager)
+                            ApplyClicks(manager)
+                            Clustering(
+                                items = positions.map { ClusterItemImpl(it) },
+                                clusterManager = manager,
+                            )
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ApplyClicks(clusterManager: ClusterManager<ClusterItemImpl>) {
+    val context = LocalContext.current
+    SideEffect {
+        clusterManager.setOnClusterClickListener {
+            Toast.makeText(context, "setOnClusterClickListener", Toast.LENGTH_SHORT).show()
+            false
+        }
+        clusterManager.setOnClusterItemClickListener {
+            Toast.makeText(context, "setOnClusterItemClickListener", Toast.LENGTH_SHORT).show()
+            false
+        }
+        clusterManager.setOnClusterItemInfoWindowClickListener {
+            Toast.makeText(context, "setOnClusterItemInfoWindowClickListener", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 }
@@ -168,6 +185,7 @@ fun IconAsClusterContent(cluster: Cluster<ClusterItemImpl>) {
         )
     }
 }
+
 
 data class ClusterItemImpl(val location: LatLng) : ClusterItem {
     override fun getPosition(): LatLng = location
