@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -65,9 +66,9 @@ class MainActivity : ComponentActivity() {
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
                     ) {
-                        
-                        val marker = MarkerState(LatLng(51.49, -0.1))
-
+                        val markerState = remember {
+                            MarkerState(LatLng(51.49, -0.1))
+                        }
                     }
                 }
             }
