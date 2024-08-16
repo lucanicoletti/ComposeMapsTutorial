@@ -12,9 +12,11 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.clustering.ClusterItem
+import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.lucanicoletti.ComposeMapsTutorial.ui.theme.ComposeMapsTutorialTheme
@@ -65,9 +67,13 @@ class MainActivity : ComponentActivity() {
                         cameraPositionState = cameraPositionState,
                         properties = mapProperties,
                         uiSettings = mapUiSettings,
+                        mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM
                     ) {
-                        val markerState = remember {
-                            MarkerState(LatLng(51.49, -0.1))
+                        positions.forEach { pos ->
+                            val markerState = remember {
+                                MarkerState(pos)
+                            }
+                            Marker(markerState)
                         }
                     }
                 }
