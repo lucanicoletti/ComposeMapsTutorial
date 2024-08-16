@@ -30,12 +30,12 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    val locationLondon = LatLng(/* latitude = */ 51.5072,/* longitude = */ -0.1276
-                    )
+                    val locationLondon = LatLng(51.5072, -0.1276)
                     val cameraPositionState = rememberCameraPositionState {
                         this.position =
-                            CameraPosition.fromLatLngZoom(/* target = */ locationLondon,/* zoom = */
-                                12f
+                            CameraPosition.fromLatLngZoom(
+                                /* target = */ locationLondon,
+                                /* zoom = */ 12f
                             )
                     }
 
@@ -44,7 +44,8 @@ class MainActivity : ComponentActivity() {
                         isIndoorEnabled = false,
                         isTrafficEnabled = false,
                         latLngBoundsForCameraTarget = LatLngBounds(
-                            LatLng(51.4728, -0.1687), LatLng(51.5378, -0.0231)
+                            LatLng(51.4728, -0.1687),
+                            LatLng(51.5378, -0.0231)
                         ),
                         maxZoomPreference = 21f,
                         minZoomPreference = 3f,
